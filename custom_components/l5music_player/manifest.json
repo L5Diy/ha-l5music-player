@@ -1,0 +1,13 @@
+{
+  "domain": "l5music_player",
+  "name": "L5Music Player",
+  "codeowners": ["@L5Diy"],
+  "config_flow": true,
+  "documentation": "https://github.com/L5Diy/l5music-player-ha",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/L5Diy/l5music-player-ha/issues",
+  "requirements": ["aiohttp>=3.8.0"],
+  "single_config_entry": false,
+  "version": "1.0.0"
+}
