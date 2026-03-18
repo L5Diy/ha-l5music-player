@@ -101,11 +101,15 @@ The Pi plays audio through whatever output is active — 3.5mm jack, HDMI, USB D
 
 ## Compatible Backends
 
-- **[Navidrome](https://www.navidrome.org/)** — lightweight, open-source music server with Subsonic API
-- **[L5Music](https://github.com/L5Diy/L5Music)** — self-hosted music streaming for Raspberry Pi
-- **[Airsonic](https://airsonic.github.io/)** — community-driven media server
-- **[Gonic](https://github.com/sentriz/gonic)** — fast, lightweight Subsonic server
-- Any server implementing the [Subsonic API](http://www.subsonic.org/pages/api.jsp)
+| Backend | Status | Notes |
+|---------|--------|-------|
+| **[L5Music](https://github.com/L5Diy/L5Music)** | ✅ Tested | Full support |
+| **[Navidrome](https://www.navidrome.org/)** | Supported | Not yet tested |
+| **[Airsonic](https://airsonic.github.io/)** | Supported | Not yet tested |
+| **[Gonic](https://github.com/sentriz/gonic)** | Supported | Not yet tested |
+| Any [Subsonic API](http://www.subsonic.org/pages/api.jsp) server | Supported | Not yet tested |
+
+> If you encounter issues with any backend, please [open an issue](https://github.com/L5Diy/ha-l5music-player/issues).
 
 ## Credits
 
