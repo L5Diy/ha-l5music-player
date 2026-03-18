@@ -25,7 +25,7 @@ A universal music streaming PWA that runs as a Home Assistant add-on. Works with
 
 - **Universal backend** — works with any Subsonic-compatible server
 - **Browser playback** — audio plays through your device
-- **Pi Cast (optional)** — play through a Pi's speakers, phone becomes a remote
+- **Pi Cast (optional)** — play through a Pi's speakers, phone/dashboard becomes a remote
 - **Mobile + Desktop** — responsive PWA
 - **Dynamic music folders** — auto-detects from your library
 - **Playlists** — create, edit, reorder, delete
@@ -45,11 +45,13 @@ Home Assistant
 
 The add-on is a lightweight Docker container running nginx. It serves static HTML/JS files. The frontend talks directly to your music server from the browser — no proxy, no middleware.
 
+> **This add-on does not affect your music server.** It is a standalone web player that connects to your existing Navidrome, Subsonic, or L5Music server. Installing, updating, or removing the add-on has zero impact on your music library, playlists, or server configuration.
+
 ## Pi Cast (Optional)
 
-**The problem:** When you play music in a browser, audio comes from your phone. Your phone is tied up — you can't watch videos, take calls, or use other apps without interrupting the music.
+**The problem:** When you play music in a browser, audio comes from your phone or dashboard. Your device is tied up — you can't watch videos, take calls, or use other apps without interrupting the music.
 
-**The solution:** Pi Cast lets you play music through a Raspberry Pi's speakers. Your phone becomes just a remote control. Pick songs, control playback, then put your phone away. The Pi keeps playing independently.
+**The solution:** Pi Cast lets you play music through a Raspberry Pi's speakers. Your phone or dashboard becomes just a remote control. Pick songs, control playback, then put your device away. The Pi keeps playing independently.
 
 ### How it works
 
