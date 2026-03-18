@@ -6,8 +6,7 @@ RUN apk add --no-cache nginx \
 
 COPY public/ /var/www/html/
 COPY nginx.conf /etc/nginx/http.d/default.conf
+COPY run.sh /
+RUN chmod +x /run.sh
 
-# s6-overlay service
-RUN mkdir -p /etc/services.d/nginx
-COPY run.sh /etc/services.d/nginx/run
-RUN chmod +x /etc/services.d/nginx/run
+ENTRYPOINT ["/run.sh"]
