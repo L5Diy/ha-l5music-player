@@ -1,94 +1,117 @@
-# L5Music Player — Home Assistant Integration
+# L5Music Player
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
+A universal music streaming PWA that works with any Subsonic-compatible server (Navidrome, Airsonic, Gonic) or L5Music.
 
-A Home Assistant custom integration that controls [L5Music Player](https://github.com/L5Diy/L5Music) — a lightweight Node.js + mpv music playback server for Raspberry Pi.
-
-L5Music Player acts as a cast receiver: your browser or HA dashboard sends stream URLs, and the Pi plays them through whatever audio output is active (Bluetooth speaker, HDMI, headphones, etc.).
+**One frontend, any backend.** Open it in a browser, connect to your music server, play music.
 
 ## Features
 
-- **Media player entity** — appears as a standard HA media player card
-- **Play / Pause / Stop / Seek / Volume** — full transport controls
-- **Play any URL** — use `media_player.play_media` to play any audio URL
-- **No hardcoded audio device** — plays to whatever PipeWire/PulseAudio default sink is active
-- **Config flow** — add via Settings → Devices & Services (no YAML needed)
-- **HACS compatible** — install through HACS as a custom repository
+- **Universal backend support** — L5Music, Navidrome, Airsonic, Gonic, or any Subsonic API server
+- **Browser playback** — plays through your device (phone, laptop, tablet)
+- **Pi Cast (optional)** — play through a Raspberry Pi with speakers, use your phone as a remote
+- **Dynamic music folders** — auto-detects folder structure from your library
+- **Playlists** — create, edit, reorder, delete
+- **Shuffle, block, search** — full music player controls
+- **Theme customization** — accent colors + background themes
+- **Mobile + Desktop** — responsive PWA, works on any screen size
+- **No account required** — just point to your server and play
 
-## Requirements
+## Quick Start
 
-A running **l5music-player** instance (Node.js + mpv) accessible on your network. See [L5Music Player setup](https://github.com/L5Diy/L5Music).
+### Option 1: Self-host (any web server)
 
-## Installation
+The frontend is just static files. Serve the `public/` folder with any web server:
 
-### HACS (Recommended)
+```bash
+# With Node.js
+npx serve public
 
-1. Open HACS in your Home Assistant
-2. Click the three dots menu → **Custom repositories**
-3. Add `https://github.com/L5Diy/l5music-player-ha` as an **Integration**
-4. Search for "L5Music Player" and install
-5. Restart Home Assistant
+# With Python
+cd public && python3 -m http.server 8080
 
-### Manual
-
-1. Copy the `custom_components/l5music_player` folder to your `config/custom_components/` directory
-2. Restart Home Assistant
-
-## Configuration
-
-1. Go to **Settings → Devices & Services → Add Integration**
-2. Search for **L5Music Player**
-3. Enter the host (IP address) and port (default: 3003) of your l5music-player instance
-4. Done — the media player entity appears on your dashboard
-
-## Usage
-
-### Dashboard
-
-Add a **Media Player** card pointing to `media_player.l5music_player` and control playback directly.
-
-### Automations
-
-```yaml
-# Play a URL
-action: media_player.play_media
-target:
-  entity_id: media_player.l5music_player
-data:
-  media_content_type: music
-  media_content_id: "http://your-server:3002/stream?id=123&token=abc"
+# With nginx, Apache, Caddy — just point to the public/ folder
 ```
 
-```yaml
-# Pause
-action: media_player.media_pause
-target:
-  entity_id: media_player.l5music_player
+Then open `http://localhost:8080` in a browser and configure your backend in Settings.
+
+### Option 2: Pi Cast (play through Pi speakers)
+
+Run the one-click setup on a Raspberry Pi:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/L5Diy/ha-l5music-player/main/setup-picast.sh | bash
 ```
 
-```yaml
-# Set volume to 50%
-action: media_player.volume_set
-target:
-  entity_id: media_player.l5music_player
-data:
-  volume_level: 0.5
+This installs Node.js, mpv, and the player. The Pi serves the frontend and acts as a cast receiver. Your phone becomes a remote control — music plays from the Pi even when you close the browser.
+
+## Setup
+
+1. Open the player in any browser
+2. Go to **Settings** → **Backend**
+3. Select your backend type: **L5Music** or **Subsonic / Navidrome**
+4. Enter your server URL, username, and password
+5. Tap **Connect**
+6. Start playing music
+
+### Pi Cast (Optional)
+
+To play music through a Pi's speakers instead of your phone:
+
+1. Run `setup-picast.sh` on your Pi (see above)
+2. In **Settings** → **Pi Cast**, enter the Pi's URL (e.g. `http://192.168.1.50:3003`)
+3. Tap **Save**
+4. Tap the **⋮** menu in the top bar → select **Pi Cast**
+5. Music now plays from the Pi. Your phone is just the remote.
+
+## Architecture
+
+```
+┌──────────────────────────────────────────────┐
+│  Frontend (PWA)                              │
+│  app.js + adapters + audio-proxy             │
+│                                              │
+│  ┌─────────────┐    ┌──────────────────┐     │
+│  │ This Device  │    │ Pi Cast          │     │
+│  │ <audio> tag  │    │ CastAudio → mpv  │     │
+│  └─────────────┘    └──────────────────┘     │
+└──────────────────┬───────────────────────────┘
+                   │ adapter layer
+        ┌──────────┴──────────┐
+        │                     │
+   L5Music API         Subsonic API
+   (l5music-core)      (Navidrome, etc.)
 ```
 
-## L5Music Player API
+## Files
 
-The integration communicates with these endpoints on the l5music-player server:
+| File | Purpose |
+|------|---------|
+| `public/app.js` | Main PWA (mobile + desktop) |
+| `public/adapter.js` | Backend adapter interface |
+| `public/adapter-l5music.js` | L5Music API adapter |
+| `public/adapter-subsonic.js` | Subsonic/Navidrome adapter |
+| `public/audio-proxy.js` | Hot-swappable playback (Audio ↔ CastAudio) |
+| `public/cast-audio.js` | CastAudio shim for Pi Cast |
+| `public/index.html` | HTML shell |
+| `public/styles.css` | Desktop styles |
+| `public/pwa.css` | Mobile styles |
+| `server.js` | Pi Cast server (Node.js + mpv, 162 lines) |
+| `setup-picast.sh` | One-click Pi Cast installer |
+| `custom_components/` | Home Assistant integration |
 
-| Endpoint | Method | Description |
-|---|---|---|
-| `/ping` | GET | Health check |
-| `/cast/status` | GET | Current playback state |
-| `/cast/load` | POST | Load and play a stream URL |
-| `/cast/pause` | POST | Pause playback |
-| `/cast/resume` | POST | Resume playback |
-| `/cast/stop` | POST | Stop and clear |
-| `/cast/seek` | POST | Seek to position |
-| `/cast/volume` | POST | Set volume (0-100) |
+## Home Assistant Integration
+
+This repo also includes an HA custom component that exposes the Pi Cast server as a standard media player entity.
+
+### Install via HACS
+
+1. Open HACS → three dots → **Custom repositories**
+2. Add `https://github.com/L5Diy/ha-l5music-player` as **Integration**
+3. Search "L5Music Player" and install
+4. Restart HA → Settings → Devices & Services → Add → L5Music Player
+5. Enter Pi host and port (default 3003)
+
+The media player card supports play, pause, stop, seek, and volume.
 
 ## License
 
