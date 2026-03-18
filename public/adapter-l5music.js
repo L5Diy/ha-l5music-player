@@ -127,6 +127,11 @@
       return d;
     },
 
+    async getFolders() {
+      try { const d = await get('/folders'); return d.folders || ['default']; }
+      catch(e) { return ['default']; }
+    },
+
     // Playlists
     async getPlaylists() {
       const d = await get('/playlists');

@@ -174,6 +174,14 @@
       return { ok: true };
     },
 
+    async getFolders() {
+      try {
+        const d = await get('/getMusicFolders');
+        const mf = d.musicFolders?.musicFolder || [];
+        return ['default', ...mf.map(f => f.name)];
+      } catch(e) { return ['default']; }
+    },
+
     // Playlists
     async getPlaylists() {
       const d = await get('/getPlaylists');

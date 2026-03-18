@@ -68,6 +68,7 @@ const MusicAdapter = (() => {
     getStreamUrl: (id) => call('getStreamUrl', id),
     getCoverUrl: (id) => call('getCoverUrl', id),
     rescan: () => call('rescan'),
+    getFolders: () => call('getFolders'),
     // Playlists
     getPlaylists: () => call('getPlaylists'),
     getPlaylist: (id) => call('getPlaylist', id),

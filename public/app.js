@@ -1401,12 +1401,7 @@ function initMobile() {
         </div>
       </div>
       <div class="section-header" style="display:flex;justify-content:space-between;align-items:center"><span>MUSIC MODE</span><span style="font-size:11px;color:var(--muted);font-weight:normal">${APP_VERSION}</span></div>
-      <div class="settings-row" style="gap:8px;flex-wrap:wrap">
-        <button class="settings-chip-btn mode-btn${mode==='default'?' active':''}" data-mode="default">Default</button>
-        <button class="settings-chip-btn mode-btn${mode==='pop'?' active':''}" data-mode="pop">Pop</button>
-        <button class="settings-chip-btn mode-btn${mode==='boost'?' active':''}" data-mode="boost">Boost</button>
-        <button class="settings-chip-btn mode-btn${mode==='littlestar'?' active':''}" data-mode="littlestar">Little Star</button>
-      </div>
+      <div class="settings-row" style="gap:8px;flex-wrap:wrap" id="set-mode-row"></div>
       <div class="section-header">ACCENT</div>
       <div class="settings-row" style="gap:10px;flex-wrap:wrap">
         ${Object.entries(L5_ACCENTS).map(([k,v]) => '<div class="theme-dot'+(curAccent===k?' active':'')+'" data-accent="'+k+'" style="width:28px;height:28px;border-radius:50%;background:'+v.accent+';cursor:pointer"></div>').join('')}
@@ -1416,6 +1411,21 @@ function initMobile() {
         ${Object.entries(L5_BGS).map(([k,v]) => '<button class="settings-chip-btn bg-btn'+(curBg===k?' active':'')+'" data-bg="'+k+'" style="'+(k==='warm'||k==='white'?'color:#1a1a1a;background:'+v.bg0+';border-color:rgba(0,0,0,.15)':'')+'">'+k.charAt(0).toUpperCase()+k.slice(1)+'</button>').join('')}
       </div>`;
 
+    // Dynamic folder detection
+    const modeRow = document.getElementById('set-mode-row');
+    (async () => {
+    const folders = MusicAdapter.isReady() ? await MusicAdapter.getFolders() : ['default'];
+    if (!modeRow) return;
+
+      if (folders.length <= 5) {
+        modeRow.innerHTML = folders.map(f => {
+          const label = f==='default'?'All':f.charAt(0).toUpperCase()+f.slice(1);
+          return '<button class="settings-chip-btn mode-btn'+(mode===f?' active':'')+'" data-mode="'+f+'">'+label+'</button>';
+        }).join('');
+      } else {
+        modeRow.innerHTML = '<select id="set-mode-select" style="padding:8px;border-radius:8px;background:var(--bg-1);color:var(--fg);border:1px solid var(--stroke);font-size:14px">' +
+          folders.map(f => '<option value="'+f+'"'+(mode===f?' selected':'')+'>'+(f==='default'?'All':f.charAt(0).toUpperCase()+f.slice(1))+'</option>').join('') + '</select>';
+      }
     mainContent.querySelectorAll('.mode-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         const m = btn.dataset.mode;
@@ -1433,6 +1443,17 @@ function initMobile() {
         renderSettings();
       });
     });
+    // Dropdown handler (>5 folders)
+    document.getElementById('set-mode-select')?.addEventListener('change', async function() {
+      const m = this.value;
+      localStorage.setItem('music_mode', m);
+      showToast('Switching…');
+      try { await l5get('/rescan'); } catch(e) {}
+      await loadLibrary();
+      showToast(songs.length + ' songs loaded');
+      renderSettings();
+    });
+    })();
     injectLandscapeNav('settings');
     mainContent.querySelectorAll('.theme-dot').forEach(d => {
       d.addEventListener('click', () => { localStorage.setItem('l5_accent', d.dataset.accent); applyL5Theme(); renderSettings(); });
@@ -2222,12 +2243,7 @@ function initDesktop() {
       <div style="font-size:12px;color:var(--muted);padding:0 0 4px">Play through a Pi with speakers. Your phone is just the remote.</div>
     </div>`;
     html += `<div class="section"><div style="display:flex;justify-content:space-between;align-items:center"><div class="section-title">Music Mode</div><div style="font-size:11px;color:var(--muted)">${APP_VERSION}</div></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;padding:8px 0">
-        <button class="btn-chip mode-btn${mode==='default'?' active':''}" data-mode="default">Default</button>
-        <button class="btn-chip mode-btn${mode==='pop'?' active':''}" data-mode="pop">Pop</button>
-        <button class="btn-chip mode-btn${mode==='boost'?' active':''}" data-mode="boost">Boost</button>
-        <button class="btn-chip mode-btn${mode==='littlestar'?' active':''}" data-mode="littlestar">Little Star</button>
-      </div></div>`;
+      <div id="dset-mode-row" style="display:flex;gap:8px;flex-wrap:wrap;padding:8px 0"></div></div>`;
     html += '<div class="section"><div class="section-title">Accent</div><div style="display:flex;gap:10px;flex-wrap:wrap;padding:8px 0">';
     html += Object.entries(L5_ACCENTS).map(([k,v]) => '<div class="theme-dot'+(curAccent===k?' active':'')+'" data-accent="'+k+'" style="width:28px;height:28px;border-radius:50%;background:'+v.accent+';cursor:pointer"></div>').join('');
     html += '</div><div class="section-title" style="margin-top:8px">Background</div><div style="display:flex;gap:8px;flex-wrap:wrap;padding:8px 0">';
@@ -2235,6 +2251,20 @@ function initDesktop() {
     html += '</div></div>';
     mainView.innerHTML = html;
 
+    // Dynamic folder detection (desktop)
+    const dModeRow = document.getElementById('dset-mode-row');
+    (async () => {
+    const dFolders = MusicAdapter.isReady() ? await MusicAdapter.getFolders() : ['default'];
+    if (!dModeRow) return;
+    if (dFolders.length <= 5) {
+        dModeRow.innerHTML = dFolders.map(f => {
+          const label = f==='default'?'All':f.charAt(0).toUpperCase()+f.slice(1);
+          return '<button class="btn-chip mode-btn'+(mode===f?' active':'')+'" data-mode="'+f+'">'+label+'</button>';
+        }).join('');
+      } else {
+        dModeRow.innerHTML = '<select id="dset-mode-select" style="padding:6px 10px;border-radius:8px;background:var(--bg-1);color:var(--fg);border:1px solid var(--stroke);font-size:13px">' +
+          dFolders.map(f => '<option value="'+f+'"'+(mode===f?' selected':'')+'>'+(f==='default'?'All':f.charAt(0).toUpperCase()+f.slice(1))+'</option>').join('') + '</select>';
+    }
     mainView.querySelectorAll('.mode-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         const m = btn.dataset.mode;
@@ -2249,6 +2279,13 @@ function initDesktop() {
         renderSettings();
       });
     });
+    // Dropdown handler (>5 folders)
+    document.getElementById('dset-mode-select')?.addEventListener('change', async function() {
+      localStorage.setItem('music_mode', this.value);
+      await fetchData();
+      renderSettings();
+    });
+    })();
 
     mainView.querySelectorAll('.theme-dot').forEach(d => {
       d.addEventListener('click', () => { localStorage.setItem('l5_accent', d.dataset.accent); applyL5Theme(); renderSettings(); });
