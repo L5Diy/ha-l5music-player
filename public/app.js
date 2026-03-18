@@ -1389,7 +1389,7 @@ function initMobile() {
           <input id="set-server-url" type="url" placeholder="Server URL (e.g. http://192.168.1.100:3002)" value="${esc(adapterCfg.server||'')}" style="padding:8px;border-radius:8px;background:var(--bg-1);color:var(--fg);border:1px solid var(--stroke);font-size:14px">
           <input id="set-username" type="text" placeholder="Username" value="${esc(adapterCfg.username||'')}" style="padding:8px;border-radius:8px;background:var(--bg-1);color:var(--fg);border:1px solid var(--stroke);font-size:14px">
           <input id="set-password" type="password" placeholder="Password" value="${esc(adapterCfg.password||adapterCfg.token||'')}" style="padding:8px;border-radius:8px;background:var(--bg-1);color:var(--fg);border:1px solid var(--stroke);font-size:14px">
-          <button id="set-connect-btn" class="settings-chip-btn" style="background:var(--accent);color:#fff;padding:10px;font-weight:600">Connect</button>
+          <button id="set-connect-btn" class="settings-chip-btn" style="padding:10px;font-weight:600;color:var(--accent)">Connect</button>
           <div id="set-status" style="font-size:12px;color:var(--muted)">${adapterType ? 'Connected: '+adapterType+' → '+(adapterCfg.server||'?') : 'Not connected'}</div>
         </div>
       </div>
@@ -1400,7 +1400,7 @@ function initMobile() {
           <div style="font-size:12px;color:var(--muted)">Play through a Pi with speakers attached. Your phone is just the remote.</div>
         </div>
       </div>
-      <div class="section-header" style="display:flex;justify-content:space-between;align-items:center"><span>MUSIC MODE</span><span style="font-size:11px;color:var(--muted);font-weight:normal">${APP_VERSION}</span></div>
+      <div class="section-header">MUSIC MODE</div>
       <div class="settings-row" style="gap:8px;flex-wrap:wrap" id="set-mode-row"></div>
       <div class="section-header">ACCENT</div>
       <div class="settings-row" style="gap:10px;flex-wrap:wrap">
@@ -2231,7 +2231,7 @@ function initDesktop() {
         <input id="dset-server-url" type="url" placeholder="Server URL" value="${escapeHtml(adapterCfg.server||'')}" style="padding:6px 10px;border-radius:8px;background:var(--bg-1);color:var(--fg);border:1px solid var(--stroke);font-size:13px;flex:1;min-width:200px">
         <input id="dset-username" type="text" placeholder="Username" value="${escapeHtml(adapterCfg.username||'')}" style="padding:6px 10px;border-radius:8px;background:var(--bg-1);color:var(--fg);border:1px solid var(--stroke);font-size:13px;width:120px">
         <input id="dset-password" type="password" placeholder="Password" value="${escapeHtml(adapterCfg.password||adapterCfg.token||'')}" style="padding:6px 10px;border-radius:8px;background:var(--bg-1);color:var(--fg);border:1px solid var(--stroke);font-size:13px;width:120px">
-        <button id="dset-connect-btn" class="btn-chip" style="background:var(--accent);color:#fff;font-weight:600">Connect</button>
+        <button id="dset-connect-btn" class="btn-chip" style="font-weight:600;color:var(--accent)">Connect</button>
       </div>
       <div id="dset-status" style="font-size:12px;color:var(--muted);padding:0 0 4px">${adapterType ? 'Connected: '+adapterType+' → '+(adapterCfg.server||'?') : 'Not connected'}</div>
     </div>`;
@@ -2242,7 +2242,7 @@ function initDesktop() {
       </div>
       <div style="font-size:12px;color:var(--muted);padding:0 0 4px">Play through a Pi with speakers. Your phone is just the remote.</div>
     </div>`;
-    html += `<div class="section"><div style="display:flex;justify-content:space-between;align-items:center"><div class="section-title">Music Mode</div><div style="font-size:11px;color:var(--muted)">${APP_VERSION}</div></div>
+    html += `<div class="section"><div class="section-title">Music Mode</div>
       <div id="dset-mode-row" style="display:flex;gap:8px;flex-wrap:wrap;padding:8px 0"></div></div>`;
     html += '<div class="section"><div class="section-title">Accent</div><div style="display:flex;gap:10px;flex-wrap:wrap;padding:8px 0">';
     html += Object.entries(L5_ACCENTS).map(([k,v]) => '<div class="theme-dot'+(curAccent===k?' active':'')+'" data-accent="'+k+'" style="width:28px;height:28px;border-radius:50%;background:'+v.accent+';cursor:pointer"></div>').join('');
