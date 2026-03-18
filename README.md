@@ -21,6 +21,8 @@ A universal music streaming PWA that runs as a Home Assistant add-on. Works with
 4. Tap **Connect**
 5. Play music
 
+![Settings](screenshots/settings.png)
+
 ## Features
 
 - **Universal backend** — works with any Subsonic-compatible server
@@ -79,6 +81,8 @@ This installs Node.js, mpv, and the cast server. It starts automatically via PM2
 4. Tap the **⋮** menu in the top bar → select **Pi Cast**
 5. Play a song — audio comes from the Pi's speakers
 
+![Playback Output Toggle](screenshots/settings-menu.png)
+
 To switch back, tap **⋮** → select **This Device**. The switch is seamless — no page reload, your queue and position are preserved.
 
 ### What Pi Cast supports
@@ -94,6 +98,20 @@ To switch back, tap **⋮** → select **This Device**. The switch is seamless �
 ### Pi audio output
 
 The Pi plays audio through whatever output is active — 3.5mm jack, HDMI, USB DAC, or a Bluetooth speaker paired to the Pi. Configure your Pi's audio output separately using `pavucontrol`, PipeWire settings, or `bluetoothctl`.
+
+## Compatible Backends
+
+- **[Navidrome](https://www.navidrome.org/)** — lightweight, open-source music server with Subsonic API
+- **[L5Music](https://github.com/L5Diy/L5Music)** — self-hosted music streaming for Raspberry Pi
+- **[Airsonic](https://airsonic.github.io/)** — community-driven media server
+- **[Gonic](https://github.com/sentriz/gonic)** — fast, lightweight Subsonic server
+- Any server implementing the [Subsonic API](http://www.subsonic.org/pages/api.jsp)
+
+## Credits
+
+- **[L5Music](https://github.com/L5Diy/L5Music)** — frontend derived from the L5Music PWA
+- **[mpv](https://mpv.io/)** (GPL) — media player used in Pi Cast
+- **[Express.js](https://expressjs.com/)** (MIT) — HTTP server for Pi Cast
 
 ## License
 
