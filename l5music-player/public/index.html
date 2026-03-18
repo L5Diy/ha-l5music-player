@@ -324,6 +324,12 @@ var cur=localStorage.getItem('l5p_output')||'browser';
 document.querySelectorAll('input[name$="-playback-output"]').forEach(function(r){
 if(r.value===cur)r.checked=true;
 r.addEventListener('change',function(){
+if(r.value==='cast'&&!localStorage.getItem('l5p_cast_url')){
+alert('Pi Cast is not set up.\nGo to Settings > Pi Cast and enter your cast server URL.');
+r.checked=false;
+document.querySelectorAll('input[name$=\"-playback-output\"][value=\"browser\"]').forEach(function(o){o.checked=true;});
+return;
+}
 AudioProxy.swap(r.value);
 document.querySelectorAll('input[name$=\"-playback-output\"]').forEach(function(o){if(o.value===r.value)o.checked=true;});
 });

@@ -46,8 +46,12 @@ const AudioProxy = (() => {
       if (wasSrc) {
         backend.src = wasSrc;
         backend.load();
-        backend.currentTime = wasTime;
-        if (wasPlaying) backend.play().catch(()=>{});
+        const restore = () => {
+          backend.currentTime = wasTime;
+          if (wasPlaying) backend.play().catch(()=>{});
+          backend.removeEventListener('loadedmetadata', restore);
+        };
+        backend.addEventListener('loadedmetadata', restore);
       }
     },
     getMode() { return localStorage.getItem('l5p_output')||'browser'; }
