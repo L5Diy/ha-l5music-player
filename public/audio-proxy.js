@@ -5,7 +5,7 @@ const AudioProxy = (() => {
   const events = ["timeupdate","loadedmetadata","ended","play","pause","playing","error"];
   function create() {
     const mode = localStorage.getItem('l5p_output') || 'browser';
-    return (mode==='cast' && typeof CastAudio!=='undefined') ? new CastAudio() : new Audio();
+    return (mode==='cast' && typeof CastAudio!=='undefined') ? new CastAudio(localStorage.getItem('l5p_cast_url')||'') : new Audio();
   }
   function attachListeners(b) {
     listeners.forEach(([ev, fn]) => b.addEventListener(ev, fn));

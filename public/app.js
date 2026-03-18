@@ -1393,6 +1393,13 @@ function initMobile() {
           <div id="set-status" style="font-size:12px;color:var(--muted)">${adapterType ? 'Connected: '+adapterType+' → '+(adapterCfg.server||'?') : 'Not connected'}</div>
         </div>
       </div>
+      <div class="section-header">PI CAST (OPTIONAL)</div>
+      <div style="padding:0 0 12px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <input id="set-cast-url" type="url" placeholder="Cast server URL (e.g. http://192.168.1.50:3003)" value="${localStorage.getItem('l5p_cast_url')||''}" style="padding:8px;border-radius:8px;background:var(--bg-1);color:var(--fg);border:1px solid var(--stroke);font-size:14px">
+          <div style="font-size:12px;color:var(--muted)">Play through a Pi with speakers attached. Your phone is just the remote.</div>
+        </div>
+      </div>
       <div class="section-header" style="display:flex;justify-content:space-between;align-items:center"><span>MUSIC MODE</span><span style="font-size:11px;color:var(--muted);font-weight:normal">${APP_VERSION}</span></div>
       <div class="settings-row" style="gap:8px;flex-wrap:wrap">
         <button class="settings-chip-btn mode-btn${mode==='default'?' active':''}" data-mode="default">Default</button>
@@ -1435,6 +1442,9 @@ function initMobile() {
     });
     // Backend connect
     document.getElementById('set-connect-btn')?.addEventListener('click', () => connectBackend('set'));
+    document.getElementById('set-cast-url')?.addEventListener('change', function() {
+      localStorage.setItem('l5p_cast_url', this.value.trim());
+    });
   }
 
   async function connectBackend(prefix) {
@@ -2204,6 +2214,13 @@ function initDesktop() {
       </div>
       <div id="dset-status" style="font-size:12px;color:var(--muted);padding:0 0 4px">${adapterType ? 'Connected: '+adapterType+' → '+(adapterCfg.server||'?') : 'Not connected'}</div>
     </div>`;
+    html += `<div class="section"><div class="section-title">Pi Cast (Optional)</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;padding:8px 0;align-items:center">
+        <input id="dset-cast-url" type="url" placeholder="Cast server URL (e.g. http://192.168.1.50:3003)" value="${escapeHtml(localStorage.getItem('l5p_cast_url')||'')}" style="padding:6px 10px;border-radius:8px;background:var(--bg-1);color:var(--fg);border:1px solid var(--stroke);font-size:13px;flex:1;min-width:200px">
+        <button id="dset-cast-save" class="btn-chip" style="font-weight:600">Save</button>
+      </div>
+      <div style="font-size:12px;color:var(--muted);padding:0 0 4px">Play through a Pi with speakers. Your phone is just the remote.</div>
+    </div>`;
     html += `<div class="section"><div style="display:flex;justify-content:space-between;align-items:center"><div class="section-title">Music Mode</div><div style="font-size:11px;color:var(--muted)">${APP_VERSION}</div></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;padding:8px 0">
         <button class="btn-chip mode-btn${mode==='default'?' active':''}" data-mode="default">Default</button>
@@ -2260,6 +2277,11 @@ function initDesktop() {
       } catch(e) {
         if (statusEl) statusEl.textContent = 'Failed: ' + e.message;
       }
+    });
+    document.getElementById('dset-cast-save')?.addEventListener('click', () => {
+      const url = document.getElementById('dset-cast-url')?.value?.trim() || '';
+      localStorage.setItem('l5p_cast_url', url);
+      showDesktopToast(url ? 'Cast URL saved' : 'Cast URL cleared');
     });
 
   }
