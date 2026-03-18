@@ -1,0 +1,13 @@
+{
+  "name": "l5music-player",
+  "version": "1.0.0",
+  "description": "L5Music cast receiver — mpv + PipeWire playback controlled via HTTP API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "music-metadata": "^11.12.3"
+  }
+}
