@@ -1,3 +1,2 @@
-#!/usr/bin/with-contenv bashio
-echo "Starting L5Music Player..."
+#!/usr/bin/execlineb -P
 nginx -g "daemon off;"
