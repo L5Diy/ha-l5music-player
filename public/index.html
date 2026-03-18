@@ -131,7 +131,14 @@
       <div class="top-center topbar-center">
       </div>
       <div class="top-right" id="settings-container">
-
+        <div class="menu-dots-wrap" style="position:relative">
+          <button id="menu-dots-btn" class="icon-btn" aria-label="Menu" style="font-size:20px;letter-spacing:2px;cursor:pointer;background:none;border:none;color:var(--text-1);padding:6px 8px">⋮</button>
+          <div id="menu-dots-dropdown" class="dots-dropdown" style="display:none;position:absolute;right:0;top:100%;min-width:200px;background:var(--bg-1);border:1px solid var(--stroke);border-radius:10px;padding:8px 0;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,.3)">
+            <div style="padding:8px 14px;font-size:12px;color:var(--muted);text-transform:uppercase">Playback Output</div>
+            <label class="dots-menu-item" style="display:flex;align-items:center;gap:8px;padding:8px 14px;cursor:pointer;font-size:14px;color:var(--text-0)"><input type="radio" name="d-playback-output" value="browser" checked style="accent-color:var(--accent)">  This Device</label>
+            <label class="dots-menu-item" style="display:flex;align-items:center;gap:8px;padding:8px 14px;cursor:pointer;font-size:14px;color:var(--text-0)"><input type="radio" name="d-playback-output" value="cast" style="accent-color:var(--accent)"> Pi Cast</label>
+          </div>
+        </div>
       </div>
     </header>
     <section id="main-view" class="main-view main-content" aria-label="Main content">
@@ -190,6 +197,14 @@
 
       </div>
       <div class="topbar-right">
+        <div class="menu-dots-wrap" style="position:relative;display:inline-block">
+          <button id="m-menu-dots-btn" class="icon-btn" aria-label="Menu" style="font-size:20px;letter-spacing:2px;cursor:pointer;background:none;border:none;color:var(--text-1);padding:6px 8px">⋮</button>
+          <div id="m-menu-dots-dropdown" class="dots-dropdown" style="display:none;position:absolute;right:0;top:100%;min-width:180px;background:var(--bg-1);border:1px solid var(--stroke);border-radius:10px;padding:8px 0;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,.3)">
+            <div style="padding:8px 14px;font-size:12px;color:var(--muted);text-transform:uppercase">Playback Output</div>
+            <label class="dots-menu-item" style="display:flex;align-items:center;gap:8px;padding:8px 14px;cursor:pointer;font-size:14px;color:var(--text-0)"><input type="radio" name="m-playback-output" value="browser" checked style="accent-color:var(--accent)">  This Device</label>
+            <label class="dots-menu-item" style="display:flex;align-items:center;gap:8px;padding:8px 14px;cursor:pointer;font-size:14px;color:var(--text-0)"><input type="radio" name="m-playback-output" value="cast" style="accent-color:var(--accent)"> Pi Cast</label>
+          </div>
+        </div>
         <button id="btn-search" class="icon-btn" aria-label="Search">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </button>
@@ -292,6 +307,8 @@
 <script defer src="adapter.js?v=b315"></script>
 <script defer src="adapter-l5music.js?v=b315"></script>
 <script defer src="adapter-subsonic.js?v=b315"></script>
+<script defer src="cast-audio.js?v=b315"></script>
+<script defer src="audio-proxy.js?v=b315"></script>
 <script defer src="app.js?v=b315"></script>
   <!-- L5 Modal -->
   <div id="l5-modal-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);align-items:center;justify-content:center">
@@ -301,5 +318,28 @@
       <div id="l5-modal-actions" style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px"></div>
     </div>
   </div>
+<script>
+(function(){
+var cur=localStorage.getItem('l5p_output')||'browser';
+document.querySelectorAll('input[name$="-playback-output"]').forEach(function(r){
+if(r.value===cur)r.checked=true;
+r.addEventListener('change',function(){
+AudioProxy.swap(r.value);
+document.querySelectorAll('input[name$=\"-playback-output\"]').forEach(function(o){if(o.value===r.value)o.checked=true;});
+});
+});
+['menu-dots-btn','m-menu-dots-btn'].forEach(function(id){
+var btn=document.getElementById(id);if(!btn)return;
+var dd=btn.nextElementSibling;
+btn.addEventListener('click',function(e){
+e.stopPropagation();
+dd.style.display=dd.style.display==='none'?'block':'none';
+});
+});
+document.addEventListener('click',function(){
+document.querySelectorAll('.dots-dropdown').forEach(function(d){d.style.display='none';});
+});
+})();
+</script>
 </body>
 </html>

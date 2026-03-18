@@ -327,7 +327,7 @@ function initMobile() {
   let currentPlaylistIndex = -1;
 
   /* ── AUDIO ─────────────────────────────────────────────── */
-  const audio = new Audio();
+  const audio = AudioProxy;
   audio.addEventListener('timeupdate', () => { if (!isSeeking) syncProgress(); });
   audio.addEventListener('loadedmetadata', () => { syncProgress(); updateNowPlayingMeta(); });
   audio.addEventListener('ended', () => playNext(true));
@@ -1695,7 +1695,7 @@ function initDesktop() {
     clearTimeout(t._to); t._to = setTimeout(() => { t.style.opacity = '0'; }, 2000);
   }
 
-  const audio = new Audio();
+  const audio = AudioProxy;
 
   function updateRangeFill(range) {
     if (!range) return;
