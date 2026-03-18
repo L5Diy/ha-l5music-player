@@ -1,4 +1,4 @@
-name: "L5Music Player"
+name: "HA-L5Music Player"
 version: "1.0.0"
 slug: "l5music-player"
 description: "Universal music streaming PWA — works with Navidrome, Subsonic, L5Music"

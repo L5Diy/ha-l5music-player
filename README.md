@@ -1,4 +1,4 @@
-# L5Music Player — Home Assistant Add-on
+# HA-L5Music Player
 
 A universal music streaming PWA that runs as a Home Assistant add-on. Works with Navidrome, Subsonic, Airsonic, Gonic, or L5Music.
 
