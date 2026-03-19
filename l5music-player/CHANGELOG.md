@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.7
+
+- Fix Pi Cast state: server was reporting "idle" during playback
+- Simplified state logic: song loaded + duration > 0 = playing or paused
+- Progress bar and timer now update during Pi Cast playback
+
 ## 1.0.6
 
 - Fix progress bar timer: desktop ID mismatch (duration-time → total-time)

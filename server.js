@@ -148,9 +148,9 @@ app.post('/cast/volume', async (req, res) => {
 
 app.get('/cast/status', (req, res) => {
   let s = 'idle';
-  if (state.playing) s = 'playing';
-  else if (state.paused) s = 'paused';
-  else if (!state.idle && state.song) s = 'stopped';
+  if (state.song && state.duration > 0) {
+    s = state.paused ? 'paused' : 'playing';
+  }
   res.json({ ok: true, state: s, song: state.song, position: Math.round(state.position * 10) / 10, duration: Math.round(state.duration * 10) / 10, volume: state.volume });
 });
 
