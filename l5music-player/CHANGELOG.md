@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.5
+
+- Revert audio-proxy cast poll (caused flickering)
+- Restore browser playback progress bar
+- Keep server.js mpv unpause fix
+
 ## 1.0.4
 
 - Fix Pi Cast: mpv auto-unpause after loading song

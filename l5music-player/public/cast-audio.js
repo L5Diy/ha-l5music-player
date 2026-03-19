@@ -40,6 +40,7 @@ class CastAudio extends EventTarget {
       body:JSON.stringify({streamUrl:this._src})
     }).then(()=>{
       this._paused=false;this._currentTime=0;this._duration=0;this._ended=false;
+      this.dispatchEvent(new Event('loadedmetadata'));
       this.dispatchEvent(new Event('play'));
     }).catch(e=>console.error('[cast] load error',e));
   }

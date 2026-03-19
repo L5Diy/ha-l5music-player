@@ -2,7 +2,6 @@
 const AudioProxy = (() => {
   let backend = null;
   const listeners = [];
-  const events = ["timeupdate","loadedmetadata","ended","play","pause","playing","error"];
   function create() {
     const mode = localStorage.getItem('l5p_output') || 'browser';
     return (mode==='cast' && typeof CastAudio!=='undefined') ? new CastAudio(localStorage.getItem('l5p_cast_url')||'') : new Audio();
@@ -56,24 +55,5 @@ const AudioProxy = (() => {
     },
     getMode() { return localStorage.getItem('l5p_output')||'browser'; }
   };
-  let castPoll = null;
-  function startCastPoll() {
-    if (castPoll) clearInterval(castPoll);
-    castPoll = setInterval(() => {
-      if (proxy.getMode() !== 'cast') return;
-      listeners.forEach(([ev, fn]) => {
-        if (ev === 'timeupdate') fn();
-        if (ev === 'loadedmetadata' && backend.duration > 0) fn();
-      });
-    }, 1500);
-  }
-  if (proxy.getMode() === 'cast') startCastPoll();
-  const origSwap = proxy.swap;
-  proxy.swap = function(mode) {
-    origSwap(mode);
-    if (mode === 'cast') startCastPoll();
-    else if (castPoll) { clearInterval(castPoll); castPoll = null; }
-  };
   return proxy;
 })();
-
