@@ -1464,17 +1464,21 @@ function initMobile() {
     // Backend connect
     document.getElementById('set-connect-btn')?.addEventListener('click', () => connectBackend('set'));
     document.getElementById('set-cast-url')?.addEventListener('change', function() {
-      localStorage.setItem('l5p_cast_url', this.value.trim());
+      let castUrl = this.value.trim();
+      if (castUrl && !/^https?:\/\//.test(castUrl)) castUrl = 'http://' + castUrl;
+      localStorage.setItem('l5p_cast_url', castUrl);
+      showToast(castUrl ? 'Cast URL saved' : 'Cast URL cleared');
     });
   }
 
   async function connectBackend(prefix) {
     const type = document.getElementById(prefix+'-backend-type')?.value;
-    const server = document.getElementById(prefix+'-server-url')?.value?.trim();
+    let server = document.getElementById(prefix+'-server-url')?.value?.trim();
     const username = document.getElementById(prefix+'-username')?.value?.trim();
     const password = document.getElementById(prefix+'-password')?.value;
     const statusEl = document.getElementById(prefix+'-status');
     if (!server) { if (statusEl) statusEl.textContent = 'Enter a server URL'; return; }
+    if (!/^https?:\/\//.test(server)) server = 'http://' + server;
     if (statusEl) statusEl.textContent = 'Connecting…';
     try {
       const cfg = { server };
@@ -1486,7 +1490,11 @@ function initMobile() {
       showToast('Connected to ' + type);
       await loadLibrary();
     } catch(e) {
-      if (statusEl) statusEl.textContent = 'Failed: ' + e.message;
+      let msg = e.message || 'Connection failed';
+      if (msg.includes('Unexpected token')) msg = 'Not a valid API server. Check the URL.';
+      else if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) msg = 'Cannot reach server. Check the URL and network.';
+      else if (msg.includes('Login failed')) msg = 'Incorrect username or password.';
+      if (statusEl) statusEl.textContent = msg;
     }
   }
 
@@ -2296,11 +2304,12 @@ function initDesktop() {
     // Backend connect
     document.getElementById('dset-connect-btn')?.addEventListener('click', async () => {
       const type = document.getElementById('dset-backend-type')?.value;
-      const server = document.getElementById('dset-server-url')?.value?.trim();
+      let server = document.getElementById('dset-server-url')?.value?.trim();
       const user = document.getElementById('dset-username')?.value?.trim();
       const pass = document.getElementById('dset-password')?.value;
       const statusEl = document.getElementById('dset-status');
       if (!server) { if (statusEl) statusEl.textContent = 'Enter a server URL'; return; }
+      if (!/^https?:\/\//.test(server)) server = 'http://' + server;
       if (statusEl) statusEl.textContent = 'Connecting…';
       try {
         const cfg = { server };
@@ -2312,11 +2321,16 @@ function initDesktop() {
         showDesktopToast('Connected to ' + type);
         await Promise.all([fetchData(), loadBlockedSongs(), loadShuffleLog()]);
       } catch(e) {
-        if (statusEl) statusEl.textContent = 'Failed: ' + e.message;
+        let msg = e.message || 'Connection failed';
+        if (msg.includes('Unexpected token')) msg = 'Not a valid API server. Check the URL.';
+        else if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) msg = 'Cannot reach server. Check the URL and network.';
+        else if (msg.includes('Login failed')) msg = 'Incorrect username or password.';
+        if (statusEl) statusEl.textContent = msg;
       }
     });
     document.getElementById('dset-cast-save')?.addEventListener('click', () => {
-      const url = document.getElementById('dset-cast-url')?.value?.trim() || '';
+      let url = document.getElementById('dset-cast-url')?.value?.trim() || '';
+      if (url && !/^https?:\/\//.test(url)) url = 'http://' + url;
       localStorage.setItem('l5p_cast_url', url);
       showDesktopToast(url ? 'Cast URL saved' : 'Cast URL cleared');
     });

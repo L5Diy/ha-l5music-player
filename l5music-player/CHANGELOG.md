@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3
+
+- Auto-add http:// when user forgets protocol in server URL or cast URL
+- User-friendly error messages (not raw JSON errors)
+- Custom modal for Pi Cast unavailable alert
+
 ## 1.0.2
 
 - Pi Cast: show alert when not configured instead of silently failing
