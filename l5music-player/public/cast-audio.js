@@ -39,8 +39,7 @@ class CastAudio extends EventTarget {
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({streamUrl:this._src})
     }).then(()=>{
-      this._paused=false;this._currentTime=0;this._ended=false;
-      this.dispatchEvent(new Event('loadedmetadata'));
+      this._paused=false;this._currentTime=0;this._duration=0;this._ended=false;
       this.dispatchEvent(new Event('play'));
     }).catch(e=>console.error('[cast] load error',e));
   }
@@ -57,7 +56,10 @@ class CastAudio extends EventTarget {
       const d = await r.json();
       if (!d.ok) return;
       if (typeof d.position==="number") this._currentTime=d.position;
-      if (typeof d.duration==="number"&&d.duration>0) this._duration=d.duration;
+      if (typeof d.duration==="number"&&d.duration>0) {
+        if (this._duration===0&&d.duration>0) { this._duration=d.duration; this.dispatchEvent(new Event("loadedmetadata")); }
+        else this._duration=d.duration;
+      }
       const oldState = this._prevState;
       if (d.state==='playing') {
         this._paused=false;

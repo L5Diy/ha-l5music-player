@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.4
+
+- Fix Pi Cast: mpv auto-unpause after loading song
+- Fix Pi Cast: progress bar sync with cast server
+- Fix Pi Cast: loadedmetadata fires when real duration arrives
+- AudioProxy cast poll drives UI updates directly
+
 ## 1.0.3
 
 - Auto-add http:// when user forgets protocol in server URL or cast URL
