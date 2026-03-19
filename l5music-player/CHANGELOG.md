@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.8
+
+- Fix sidebar icons blowout on iPad/tablet screens
+
 ## 1.0.7
 
 - Fix Pi Cast state: server was reporting "idle" during playback
