@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.6
+
+- Fix progress bar timer: desktop ID mismatch (duration-time → total-time)
+
 ## 1.0.5
 
 - Revert audio-proxy cast poll (caused flickering)

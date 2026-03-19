@@ -1750,7 +1750,7 @@ function initDesktop() {
   }
   const progressSliderEl = document.getElementById('progress-slider');
   const currentTimeEl = document.getElementById('current-time');
-  const durationTimeEl = document.getElementById('duration-time');
+  const durationTimeEl = document.getElementById('total-time');
   const coverImg = document.getElementById('cover-art');
   let isSeeking = false;
 
